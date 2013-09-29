@@ -52,7 +52,7 @@ using Server;
         }
         private void runServer()
         {
-            TcpListener myListener = new TcpListener(IPAddress.Parse("127.0.0.1"), PORT);
+            TcpListener myListener = new TcpListener(IPAddress.Parse("192.168.1.199"), PORT);
             myListener.Start();
             callback("开始侦听  端口……" + PORT.ToString());
             while (true)
@@ -97,7 +97,9 @@ using Server;
                         //callback("收到客户端" + ck.Tc.Client.RemoteEndPoint + "信息:" + data);
                         if (data.IndexOf("policy") > -1)
                         {
-                            callback("<?xml version='1.0'?><cross-domain-policy><allow-access-from domain='*' to-ports='*' /></cross-domain-policy>");
+                            callback("客户端请求安全沙箱访问权限");
+                            call(Utils.GetBytes("<?xml version='1.0'?><cross-domain-policy><allow-access-from domain='*' to-ports='*' /></cross-domain-policy>"));
+                            callback("派发安全策略文件");
                         }
                         else
                         {
@@ -106,7 +108,7 @@ using Server;
                     }
                     else
                     {
-                        callback("未知数据");
+                        //callback("未知数据");
                     }
                 }
                 catch (Exception e)

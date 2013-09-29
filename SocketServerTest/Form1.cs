@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -43,6 +44,15 @@ namespace SocketServerTest
             if (txt_send.Text.Length < 1) return ;
             s.send(txt_send.Text);
             showText("广播：" + txt_send.Text);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            string str="";
+            for(int i=0;i<50000;i++){
+                str += "public var p" + i.ToString() + ":String;\r\n";
+            }
+            File.WriteAllText("a.txt",str);
         }
     }
 }

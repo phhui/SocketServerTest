@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Server;
+using System.Collections;
     /// <summary>
     /// Socket 服务端例子
     /// 这个例子仅仅处理一个 客户端的访问， 处理完毕后退出.
@@ -41,6 +42,17 @@ using Server;
             th.IsBackground = true;
             th.Start();
             nd = new ProcessDelegate(trace);
+            ArrayList al=new ArrayList();
+            al.Add("int");
+            al.Add("string");
+            al.Add("int");
+            al.Add("int");
+            al.Add("string");
+            al.Add("string");
+            al.Add("int");
+            al.Add("int");
+            al.Add("int");
+            KeyType.addType(111,al);
         }
         public void callback(string str)
         {
@@ -92,13 +104,20 @@ using Server;
                     byte[] buff = new byte[1024];
                     sk.Read(buff, 0, buff.Length);
                     string data = Utils.GetString(buff);
+                    ArrayList al = SockDataDecode.decode(buff);
+                    string str = "";
+                    for (int i = 0; i < al.Count; i++)
+                    {
+                        str += al[i] + ",";
+                    }
+                    callback("数组："+str);
                     if (data != "")
                     {
                         //callback("收到客户端" + ck.Tc.Client.RemoteEndPoint + "信息:" + data);
                         if (data.IndexOf("policy") > -1)
                         {
                             callback("客户端请求安全沙箱访问权限");
-                            call(Utils.GetBytes("<?xml version='1.0'?><cross-domain-policy><allow-access-from domain='*' to-ports='*' /></cross-domain-policy>"));
+                            call(Utils.GetBytes("<?xml version='1.0'?><cross-domain-policy><allow-access-from domain='*' to-ports='*' /></cross-domain-policy>\0"));
                             callback("派发安全策略文件");
                         }
                         else
@@ -113,7 +132,7 @@ using Server;
                 }
                 catch (Exception e)
                 {
-                    callback("用户" + ck.NickName + "断开连接。"+e.Data);
+                    callback("用户" + ck.NickName + "断开连接。"+e.Message);
                     sk.Close();
                     ck.th.Abort();
                 }

@@ -48,11 +48,7 @@ namespace SocketServerTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string str="";
-            for(int i=0;i<50000;i++){
-                str += "public var p" + i.ToString() + ":String;\r\n";
-            }
-            File.WriteAllText("a.txt",str);
+
         }
     }
 }
